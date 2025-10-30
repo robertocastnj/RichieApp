@@ -34,7 +34,6 @@ const mockProducts = [
 export default function LandingPage() {
   return (
     <div>
-      <Navbar />
       <Hero />
       <CategorySection />
 
@@ -48,8 +47,6 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
-
-      <Footer />
     </div>
   )
 }
