@@ -1,1 +1,70 @@
 @import 'tailwindcss';
+
+/* 🎨 Paleta de colores global */
+:root {
+  --color-dark: #292929;
+  --color-light: #ffffff;
+  --color-graylight: #686868;
+  --color-yellow: #e0ae1f;
+  --color-red: #c61e1e;
+}
+
+/* 💡 Ejemplo de tema alternativo (si quisieras un modo claro después)
+[data-theme='light'] {
+  --color-dark: #ffffff;
+  --color-light: #292929;
+  --color-graylight: #999999;
+  --color-yellow: #e0ae1f;
+  --color-red: #c61e1e;
+}
+*/
+
+body {
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  font-family: 'Inter', sans-serif;
+}
+
+/* 🌟 Clases personalizadas (útiles en componentes) */
+.text-dark {
+  color: var(--color-dark);
+}
+.text-light {
+  color: var(--color-light);
+}
+.text-graylight {
+  color: var(--color-graylight);
+}
+.text-yellow {
+  color: var(--color-yellow);
+}
+.text-red {
+  color: var(--color-red);
+}
+
+.bg-dark {
+  background-color: var(--color-dark);
+}
+.bg-light {
+  background-color: var(--color-light);
+}
+.bg-graylight {
+  background-color: var(--color-graylight);
+}
+.bg-yellow {
+  background-color: var(--color-yellow);
+}
+.bg-red {
+  background-color: var(--color-red);
+}
+
+/* 🔄 Hover y transición global */
+button,
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover,
+a:hover {
+  opacity: 0.9;
+}
