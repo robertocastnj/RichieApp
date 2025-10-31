@@ -1,31 +1,92 @@
+// src/components/LoginForm.jsx
+import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../libs/firebase'
+
 export default function LoginForm() {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({ email: '', password: '' })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    try {
+      await signInWithEmailAndPassword(auth, formData.email, formData.password)
+      navigate('/')
+    } catch (err) {
+      console.error('❌ Error logging in:', err.message)
+      setError('Invalid email or password')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div className="max-w-sm mx-auto bg-white shadow-md rounded-lg p-6 mt-20">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Iniciar sesión</h2>
-      <form className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
-          <input
-            type="email"
-            placeholder="tuemail@ejemplo.com"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-          <input
-            type="password"
-            placeholder="********"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </div>
-        <button className="w-full bg-primary text-white py-2 rounded-md font-semibold hover:bg-rose-600 transition">
-          Acceder
-        </button>
-      </form>
-      <p className="text-sm text-gray-600 mt-4 text-center">
-        ¿No tienes cuenta? <a href="#" className="text-primary hover:underline">Regístrate aquí</a>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Email */}
+      <div>
+        <label className="block text-sm text-(--color-light)/80 mb-2">
+          Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="w-full bg-(--color-graylight)/20 border border-(--color-graylight)/30 text-(--color-light) rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
+        />
+      </div>
+
+      {/* Password */}
+      <div>
+        <label className="block text-sm text-(--color-light)/80 mb-2">
+          Contraseña
+        </label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          className="w-full bg-(--color-graylight)/20 border border-(--color-graylight)/30 text-(--color-light) rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
+        />
+      </div>
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-(--color-red) text-sm text-center">{error}</p>
+      )}
+
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-(--color-yellow) text-(--color-dark) py-2 rounded-md font-semibold hover:bg-(--color-red) hover:text-(--color-light) transition"
+      >
+        {loading ? 'Entrando...' : 'Entrar'}
+      </button>
+
+      {/* Register link */}
+      <p className="text-sm text-center text-(--color-light)/70">
+        ¿Aún no tienes cuenta?{' '}
+        <Link
+          to="/register"
+          className="text-(--color-yellow) hover:text-(--color-red) transition font-medium"
+        >
+          Crear cuenta
+        </Link>
       </p>
-    </div>
-  );
+    </form>
+  )
 }

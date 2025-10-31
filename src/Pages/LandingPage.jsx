@@ -1,37 +1,16 @@
-import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import CategorySection from '../components/CategorySection'
-import Footer from '../components/Footer'
 import ProductCard from '../components/ProductCard'
-
-const mockProducts = [
-  {
-    id: 1,
-    title: 'Camiseta Minimalista',
-    price: '$299 MXN',
-    image: '/images/products/tshirt.jpg',
-  },
-  {
-    id: 2,
-    title: 'Sticker Abstracto',
-    price: '$59 MXN',
-    image: '/images/products/sticker.jpg',
-  },
-  {
-    id: 3,
-    title: 'Póster Geométrico',
-    price: '$199 MXN',
-    image: '/images/products/poster.jpg',
-  },
-  {
-    id: 4,
-    title: 'Taza Artística',
-    price: '$149 MXN',
-    image: '/images/products/mug.jpg',
-  },
-]
+import { useFetchData } from '../hooks/useFetchData'
 
 export default function LandingPage() {
+  const { data: images, loading, error } = useFetchData('images')
+
+  const randomImages =
+    images && images.length > 0
+      ? [...images].sort(() => Math.random() - 0.5).slice(0, 5)
+      : []
+
   return (
     <div>
       <Hero />
@@ -41,9 +20,32 @@ export default function LandingPage() {
         <h3 className="text-2xl font-bold text-gray-900 mb-8">
           Productos destacados
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {mockProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
+
+        {loading && (
+          <p className="text-gray-500 text-center">Cargando productos...</p>
+        )}
+        {error && (
+          <p className="text-red-500 text-center">
+            Error al cargar imágenes 😞
+          </p>
+        )}
+        {!loading && !error && randomImages.length === 0 && (
+          <p className="text-gray-500 text-center">
+            No hay imágenes disponibles.
+          </p>
+        )}
+
+        {/* Products */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          {randomImages.map((img) => (
+            <ProductCard
+              key={img.id}
+              product={{
+                title: img.name,
+                price: img.price,
+                image: img.public_url,
+              }}
+            />
           ))}
         </div>
       </section>

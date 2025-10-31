@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { auth, db } from '../libs/firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
+import { Navigate, useNavigate } from 'react-router-dom'
 export default function RegisterPage() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     lastname: '',
@@ -19,9 +22,20 @@ export default function RegisterPage() {
     e.preventDefault()
     const formData = new FormData(e.target)
     const { email, password, ...rest } = Object.fromEntries(formData.entries())
-    console.log({ email, password, ...rest })
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      )
+      await setDoc(doc(db, 'users', user.uid), {
+        ...rest,
+        uid: user.uid,
+        email,
+      })
+      if (user) {
+        navigate('/login')
+      }
     } catch (err) {
       console.error('Error registering user:', err)
     }
@@ -29,7 +43,7 @@ export default function RegisterPage() {
 
   return (
     <div className="flex items-center justify-center mt-10 min-h-screen bg-(--color-lightdark)  px-4">
-      <div className="bg-(--color-light)/10 backdrop-blur-md p-8 rounded-xl w-full max-w-md shadow-lg border border-(--color-graylight)/40">
+      <div className="bg-(--color-dark) backdrop-blur-md p-8 rounded-xl w-full max-w-md shadow-lg border border-(--color-graylight)/40">
         {/*  Header  */}
         <h2 className="text-3xl font-bold text-center text-(--color-yellow) mb-6">
           Registrar nuevo usuario
@@ -48,7 +62,7 @@ export default function RegisterPage() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-md bg-(--color-dark) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
+              className="w-full px-4 py-2 rounded-md bg-(--color-graylight) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
             />
           </div>
 
@@ -63,7 +77,7 @@ export default function RegisterPage() {
               value={formData.lastname}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-md bg-(--color-dark) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
+              className="w-full px-4 py-2 rounded-md bg-(--color-graylight) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
             />
           </div>
 
@@ -78,7 +92,7 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-md bg-(--color-dark) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
+              className="w-full px-4 py-2 rounded-md bg-(--color-graylight) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
             />
           </div>
 
@@ -93,7 +107,7 @@ export default function RegisterPage() {
               value={formData.phone}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-md bg-(--color-dark) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
+              className="w-full px-4 py-2 rounded-md bg-(--color-graylight) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
             />
           </div>
 
@@ -108,7 +122,7 @@ export default function RegisterPage() {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 rounded-md bg-(--color-dark) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
+              className="w-full px-4 py-2 rounded-md bg-(--color-graylight) border border-(--color-graylight)/60 text-(--color-light) focus:outline-none focus:ring-2 focus:ring-(--color-yellow)"
             />
           </div>
 
@@ -122,7 +136,7 @@ export default function RegisterPage() {
         </form>
 
         {/* --- Footer --- */}
-        <p className="text-center text-sm mt-6">
+        <p className="text-center text-sm mt-6 text-(--color-light)">
           ¿Ya tienes una cuenta?{' '}
           <a href="/login" className="text-(--color-yellow) hover:underline">
             Log in

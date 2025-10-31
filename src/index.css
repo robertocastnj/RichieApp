@@ -1,6 +1,5 @@
 @import 'tailwindcss';
 
-/* 🎨 Paleta de colores global */
 :root {
   --color-dark: #292929;
   --color-light: #ffffff;
@@ -8,16 +7,6 @@
   --color-yellow: #e0ae1f;
   --color-red: #c61e1e;
 }
-
-/* 💡 Ejemplo de tema alternativo (si quisieras un modo claro después)
-[data-theme='light'] {
-  --color-dark: #ffffff;
-  --color-light: #292929;
-  --color-graylight: #999999;
-  --color-yellow: #e0ae1f;
-  --color-red: #c61e1e;
-}
-*/
 
 body {
   background-color: var(--color-dark);
